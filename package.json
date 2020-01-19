@@ -1,0 +1,21 @@
+{
+  "name": "task2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "json-to-ast": "^2.1.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "webpack index.js --mode production --target='node' -o build/linter.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
