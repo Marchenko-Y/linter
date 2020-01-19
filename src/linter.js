@@ -37,9 +37,6 @@ class Linter {
 }
 
 module.exports = function(jsonString) {
-  if (typeof jsonString !== `string`) {
-    throw new Error(`not correctly type data: ${jsonString}`);
-  }
   const instance = new Linter(jsonString);
   return instance.run();
 };
