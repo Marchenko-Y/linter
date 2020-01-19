@@ -2,43 +2,6 @@ const walker = require("../../utils/walker");
 const getBlockName = require("../../utils/getBlockName");
 const sizes = require("../../constants/constants");
 
-function checkButtonSize(context, state, obj) {
-  if (!sizeStandard) {
-    state.recheck.push(() => {
-      checkButtonSize(context, state, obj);
-    });
-    return;
-  }
-
-  const { children = [] } = obj;
-  const mods = children.find(function(child) {
-    return child.key.value === "mods";
-  });
-  let size =
-    mods &&
-    mods.value.children.find(function(child) {
-      return child.key.value === "size";
-    });
-  size = size.value.value;
-
-  if (!size) return;
-
-  const index = sizes.indexOf(sizeStandard);
-  if (index === -1 && index === sizes.length - 1) return;
-  if (size !== sizes[index + 1]) {
-    const { start, end } = obj.loc;
-    const error = {
-      code: "WARNING.INVALID_BUTTON_SIZE",
-      error: `Размер кнопки блока warning должен быть на 1 шаг больше эталонного`,
-      location: {
-        start: { column: start.column, line: start.line },
-        end: { column: end.column, line: end.line }
-      }
-    };
-    context.reporter(error);
-  }
-}
-
 module.exports = {
   create(context) {
     const state = {};
@@ -52,6 +15,43 @@ module.exports = {
 
         let sizeStandard = undefined;
         let placeholder = undefined;
+
+        function checkButtonSize(context, state, obj) {
+          if (!sizeStandard) {
+            state.recheck.push(() => {
+              checkButtonSize(context, state, obj);
+            });
+            return;
+          }
+
+          const { children = [] } = obj;
+          const mods = children.find(function(child) {
+            return child.key.value === "mods";
+          });
+          let size =
+            mods &&
+            mods.value.children.find(function(child) {
+              return child.key.value === "size";
+            });
+          size = size.value.value;
+
+          if (!size) return;
+
+          const index = sizes.indexOf(sizeStandard);
+          if (index === -1 && index === sizes.length - 1) return;
+          if (size !== sizes[index + 1]) {
+            const { start, end } = obj.loc;
+            const error = {
+              code: "WARNING.INVALID_BUTTON_SIZE",
+              error: `Размер кнопки блока warning должен быть на 1 шаг больше эталонного`,
+              location: {
+                start: { column: start.column, line: start.line },
+                end: { column: end.column, line: end.line }
+              }
+            };
+            context.reporter(error);
+          }
+        }
 
         function checkButtonPlace(obj, isRecheck) {
           if (!isRecheck) {
